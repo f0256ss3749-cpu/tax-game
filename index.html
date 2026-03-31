@@ -6,227 +6,91 @@
     <title>租稅小學堂</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body {
-            background-image: url("遊戲封面.png");
-            background-size: cover;
-            margin: 0;
-            overflow: hidden;
-            user-select: none;
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #0d1117; user-select: none; touch-action: none; }
+        #start-screen {
+            position: fixed; inset: 0;
+            background-image: url("遊戲封面.png"); background-size: cover; background-position: center;
+            display: flex; flex-direction: column; align-items: center; z-index: 100;
         }
+        .game-title { margin-top: 20px; font-size: 45px; color:#003060; font-weight: bold; text-shadow: 2px 2px 4px rgba(255,255,255,0.8); }
         .start-btn {
-            background-image: url("開始按鈕.png");background-size:contain;background-repeat:no-repeat;background-position:center;background-color: transparent;border: none;cursor: pointer;width:250px;height:80px; position: absolute;bottom: 50px;left: 50%;transform: translateX(-50%); transition: transform 0.1s; }
-        .start-btn:active {transform: translateX(-50%) scale(0.95);}
-        .game-title {
-            position: absolute;
-            top: 0px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 60px;
-            color:#003060;
-            font-weight: bold;
-            white-space: nowrap;
+            background-image: url("開始按鈕.png"); background-size: contain; background-repeat: no-repeat; background-position: center;
+            background-color: transparent; border: none; cursor: pointer;
+            width: 280px; height: 100px; position: absolute; bottom: 10%;
         }
         .register-box {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 85%;
-            max-width: 400px;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-            box-sizing: border-box;
-            text-align: center;
-            display: none; 
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 85%; max-width: 350px; background: rgba(255, 255, 255, 0.95);
+            padding: 30px; border-radius: 20px; text-align: center; display: none;
         }
-        .register-box input {
-            width: 100%;
-            padding: 15px;
-            font-size: 18px;
-            border: 2px solid #d05341;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            box-sizing: border-box;
-            outline: none;
-        }
-        .go-btn {
-            background-color: #d05341;
-            color: #ffffff;
-            border: none;
-            padding: 15px 30px;
-            font-size: 20px;
-            font-weight: bold;
-            border-radius: 50px;
-            cursor: pointer;
-            width: 100%;
-            box-shadow: 0 5px 0 #a03d2e;
-            transition: all 0.1s;
-        }
-        #game-container {
-            position: relative;
-            width: 100vw;
-            height: 100vh;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background-color: #0d1117;
-            background: radial-gradient(circle at center, #1a202c 0%, #0d1117 100%);
-        }
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap');
-        canvas {
-            border: 4px solid #4fd1c5;
-            box-shadow: 0 0 20px rgba(79, 209, 197, 0.4);
-            border-radius: 8px;
-            /* 關鍵：讓 canvas 在容器內根據寬度縮放 */
-            max-width: 95vw;
-            height: auto !important; 
-        }
-        #ui-layer {
-            position: absolute;
-            top: 20px;
-            pointer-events: none;
-            text-align: center;
-            width: 100%;
-            z-index: 10;
+        input { width: 100%; padding: 12px; margin-bottom: 15px; border: 2px solid #d05341; border-radius: 8px; font-size: 18px; }
+        .go-btn { background: #d05341; color: white; width: 100%; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+
+        #game-wrapper { position: relative; width: 100vw; height: 100vh; display: none; overflow: hidden; }
+        canvas { display: block; width: 100%; height: 100%; }
+        
+        /* UI 層置頂 */
+        #ui-overlay {
+            position: absolute; top: 10px; left: 0; width: 100%; 
+            display: flex; flex-direction: column; align-items: center; pointer-events: none;
         }
         .question-card {
-            background: rgba(26, 32, 44, 0.95);
-            padding: 15px 30px;
-            border-radius: 20px;
-            display: inline-block;
-            border: 2px solid #4fd1c5;
-            max-width: 90%;
+            background: rgba(15, 23, 42, 0.9); border: 2px solid #4fd1c5;
+            padding: 12px; border-radius: 15px; width: 92%; max-width: 500px; pointer-events: auto;
         }
-        #timer-bar-container {
-            width: 100%;
-            height: 8px;
-            background: #2d3748;
-            margin-top: 10px;
-            border-radius: 5px;
-            overflow: hidden;
-        }
-        #timer-bar {
-            width: 100%;
-            height: 100%;
-            background: #4fd1c5;
-        }
-        .option-box {
-            background: #1e293b;
-            padding: 8px 12px;
-            border-radius: 8px;
-            border: 1px solid #1e3a8a;
-            color: #cbd5e1;
-        }
-        .option-correct {
-            border-color: #10b981 !important;
-            background: #064e3b !important;
-            color: #ecfdf5 !important;
-        }
-        #hud {
-            position: absolute;
-            bottom: 25px;
-            width: 95%;
-            display: flex;
-            justify-content: flex-start;
-            color: #4fd1c5;
-            font-size: 20px;
-            font-weight: bold;
-            pointer-events: none;
-        }
+        .option-box { background: #1e293b; padding: 6px 10px; border-radius: 6px; border: 1px solid #334155; color: #cbd5e1; font-size: 14px; }
+        .option-correct { border-color: #10b981 !important; background: #064e3b !important; }
+        
+        #hud { position: absolute; bottom: 20px; left: 20px; color: #4fd1c5; font-weight: bold; font-size: 20px; pointer-events: none; }
         #feedback {
-            position: absolute;
-            top: 55%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 80px;
-            font-weight: 900;
-            opacity: 0;
-            pointer-events: none;
-            z-index: 20;
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            font-size: 60px; font-weight: 900; opacity: 0; pointer-events: none; transition: 0.3s;
         }
         .result-screen {
-            position: absolute;
-            inset: 0;
-            background: rgba(13, 17, 23, 0.98);
-            color: white;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
+            position: fixed; inset: 0; background: rgba(0,0,0,0.9);
+            display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 200; color: white;
         }
     </style>
 </head>
-<body>  
+<body>
 
-    <h1 id="gameTitle" class="game-title">租稅射射看</h1>
-    <button id="startBtn" class="start-btn" onclick="startGame()"></button>
-    <div id="registerBox" class="register-box">
-        <input type="text" id="playerName" placeholder="請輸入班級與姓名" autocomplete="off">
-        <button class="go-btn" onclick="goGame()">GO!</button>
+    <div id="start-screen">
+        <h1 class="game-title">租稅射射看</h1>
+        <button class="start-btn" onclick="showRegister()"></button>
+        <div id="registerBox" class="register-box">
+            <input type="text" id="playerName" placeholder="請輸入班級與姓名">
+            <button class="go-btn" onclick="confirmEntry()">GO!</button>
+        </div>
     </div>
 
-    <div id="game-container">
-        <div id="ui-layer">
+    <div id="game-wrapper">
+        <div id="ui-overlay">
             <div class="question-card">
-                <div class="flex justify-start items-center mb-2">
-                    <div id="progress-text" class="text-xs text-cyan-400 font-bold tracking-widest">任務進度：1 / 10</div>
+                <div id="progress-text" class="text-xs text-cyan-400 font-bold mb-1">進度：1 / 10</div>
+                <h2 id="question-text" class="text-lg font-bold text-white mb-2 leading-tight">載入中...</h2>
+                <div id="options-container" class="grid grid-cols-1 gap-1 text-left">
+                    <div id="box-A" class="option-box">A. <span id="opt-A">---</span></div>
+                    <div id="box-B" class="option-box">B. <span id="opt-B">---</span></div>
+                    <div id="box-C" class="option-box">C. <span id="opt-C">---</span></div>
                 </div>
-                <h2 id="question-text" class="text-xl font-bold text-white mb-3">載入中...</h2>
-                <div id="options-container" class="grid grid-cols-3 gap-2 text-left text-sm">
-                    <div id="box-A" class="option-box">
-                        <span class="font-black mr-1 text-cyan-400">A</span><span id="opt-A">---</span>
-                    </div>
-                    <div id="box-B" class="option-box">
-                        <span class="font-black mr-1 text-cyan-400">B</span><span id="opt-B">---</span>
-                    </div>
-                    <div id="box-C" class="option-box">
-                        <span class="font-black mr-1 text-cyan-400">C</span><span id="opt-C">---</span>
-                    </div>
-                </div>
-                <div id="timer-bar-container">
-                    <div id="timer-bar"></div>
+                <div class="w-full bg-gray-700 h-1.5 mt-2 rounded-full overflow-hidden">
+                    <div id="timer-bar" class="bg-cyan-400 h-full w-full"></div>
                 </div>
             </div>
         </div>
-        <div id="hud">
-            <div>得分：<span id="score" class="text-white text-2xl ml-2">0</span></div>
-        </div>
+
+        <div id="hud">得分：<span id="score">0</span></div>
         <div id="feedback"></div>
-        <div id="result-screen" class="result-screen">
-            <div class="border-4 border-cyan-400 p-10 text-center rounded-3xl bg-slate-900 shadow-2xl">
-                <h1 class="text-5xl font-black mb-6 text-cyan-400">任務完成</h1>
-                <p id="final-score" class="text-amber-400 text-7xl font-black">0</p>
-            </div>
-        </div>
         <canvas id="gameCanvas"></canvas>
+
+        <div id="result-screen" class="result-screen">
+            <h1 class="text-4xl font-black text-cyan-400 mb-4">任務完成</h1>
+            <p class="text-xl mb-2">最終得分</p>
+            <p id="final-score" class="text-7xl font-black text-amber-400">0</p>
+        </div>
     </div>
 
     <script>
-        function startGame() {
-            document.getElementById('gameTitle').style.display = 'none';
-            document.getElementById('startBtn').style.display = 'none';
-            document.getElementById('registerBox').style.display = 'block';
-        }
-
-        function goGame() {
-            var name = document.getElementById('playerName').value;
-            if (name === "") {
-                alert("請輸入班級與姓名才能開始喔！");
-            } else {
-                document.getElementById('registerBox').style.display = 'none';
-                document.body.style.backgroundImage = 'none';
-                document.body.style.cursor = 'none';
-                document.getElementById('game-container').style.display = 'flex';
-                initGame();
-                animate();
-            }
-        }
-
         const rawQuestionBank = [
             { q: "國家的稅收分為哪兩類？", options: ["國稅及地方稅", "所得稅及房屋稅", "地價稅及營業稅"], correct: "國稅及地方稅" },
             { q: "下列哪一種稅屬於地方稅？", options: ["萬萬稅", "贈與稅", "房屋稅"], correct: "房屋稅" },
@@ -234,214 +98,181 @@
             { q: "遇到稅捐有爭議時可以找誰幫忙？", options: ["消保官", "法務官", "納保官"], correct: "納保官" },
             { q: "雲端發票的好處有什麼？", options: ["主動通知中獎", "發票變大", "免費看電影"], correct: "主動通知中獎" },
             { q: "買東西時不印出紙本發票，把發票存在手機條碼裡，這叫做什麼？", options: ["隱形發票", "空氣發票", "雲端發票"], correct: "雲端發票" },
-            { q: "爸爸開的汽車、媽媽騎的機車（151cc以上），每年 4 月要繳什麼稅才能上路？", options: ["紅綠燈稅", "使用牌照稅", "停車稅"], correct: "使用牌照稅" },
-            { q: "去看電影、去遊樂園玩，門票裡其實包含了一種稅，叫做？", options: ["開心稅", "贈與稅", "娛樂稅"], correct: "娛樂稅" },
-            { q: "為什麼政府要向人民課徵租稅？", options: ["為了依法取得建設國家的穩定財源", "為了存錢", "為了好玩"], correct: "為了依法取得建設國家的穩定財源" },
-            { q: "下列哪一項是稅金的用途？", options: ["蓋學校", "修馬路", "以上皆是"], correct: "以上皆是" },
-            { q: "負責徵收「國稅」的單位是哪一個？", options: ["警察局", "國稅局", "稅捐處"], correct: "國稅局" },
-            { q: "誰需要繳納綜合所得稅？", options: ["有中華民國來源所得的人", "所有小朋友", "只有外國人"], correct: "有中華民國來源所得的人" },
-            { q: "繼承過世親人的財產時，要繳納什麼稅？", options: ["遺產稅", "房屋稅", "地價稅"], correct: "遺產稅" },
-            { q: "誰可以繼承遺產稅？", options: ["男生", "女生", "男生與女生都可以"], correct: "男生與女生都可以" },
-            { q: "如果超過繳稅期間沒繳稅，會被加徵什麼錢？", options: ["獎金", "滯納金", "手續費"], correct: "滯納金" },
-            { q: "下列哪一項是「稅金」帶給我們的生活便利？", options: ["晚上的路燈會亮", "有乾淨的公園可以玩", "以上皆是"], correct: "以上皆是" },
-            { q: "當人死亡留有遺產時，應由誰來繳納遺產稅？", options: ["鄰居", "繼承人", "警察"], correct: "繼承人" },
-            { q: "「綜合所得稅」通常在每年的幾月辦理申報？", options: ["4月", "5月", "11月"], correct: "5月" },
-            { q: "買東西付錢時，價格裡其實已經包含了什麼稅？", options: ["所得稅", "遺產稅", "營業稅"], correct: "營業稅" },
-            { q: "每年11月要繳納土地的什麼稅？", options: ["地價稅", "牌照稅", "營業稅"], correct: "地價稅" },
-            { q: "在同一縣市內有很多筆土地，會收到幾張地價稅單？", options: ["每一筆一張", "只會收到一張", "都不會收到"], correct: "只會收到一張" },
-            { q: "關於牌照稅歸戶，一張繳款書最多限列幾筆車籍？", options: ["3比", "5筆", "10筆"], correct: "5筆" },
-            { q: "在哪裡可以找到納保官？", options: ["國稅局及地方稅捐機關", "學校", "超商"], correct: "國稅局及地方稅捐機關" },
-            { q: "想要房屋稅省錢，要在什麼時間之前申請「住家用」稅率？", options: ["1月22日", "3月22日", "9月22日"], correct: "3月22日" },
-            { q: "每年 11 月開徵的稅目是？", options: ["使用牌照稅", "房屋稅", "地價稅"], correct: "地價稅" }
+            { q: "每年 4 月要繳什麼稅才能上路？", options: ["紅綠燈稅", "使用牌照稅", "停車稅"], correct: "使用牌照稅" },
+            { q: "看電影、去遊樂園玩，門票包含什麼稅？", options: ["開心稅", "贈與稅", "娛樂稅"], correct: "娛樂稅" },
+            { q: "為什麼要向人民課徵租稅？", options: ["為了國家建設財源", "為了存錢", "為了好玩"], correct: "為了國家建設財源" },
+            { q: "下列哪一項是稅金的用途？", options: ["蓋學校", "修馬路", "以上皆是"], correct: "以上皆是" }
         ];
 
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
-        const scoreElement = document.getElementById('score');
-        const questionText = document.getElementById('question-text');
-        const progressText = document.getElementById('progress-text');
-        const timerBar = document.getElementById('timer-bar');
-        const feedback = document.getElementById('feedback');
-        const resultScreen = document.getElementById('result-screen');
-        const finalScoreDisplay = document.getElementById('final-score');
-        const optA = document.getElementById('opt-A');
-        const optB = document.getElementById('opt-B');
-        const optC = document.getElementById('opt-C');
-        const boxes = { 'A': document.getElementById('box-A'), 'B': document.getElementById('box-B'), 'C': document.getElementById('box-C') };
+        let gameQuestions = [], currentIdx = 0, score = 0;
+        let targets = [], mouse = { x: 0, y: 0 }, isGameOver = false, isWaiting = false;
+        let timeLeft = 8, timerInterval;
 
-        let gameQuestions = [];
-        let currentQuestionIndex = 0;
-        let score = 0;
-        let mouse = { x: 0, y: 0 };
-        let targets = [];
-        let particles = [];
-        let isGameOver = false;
-        let isWaitingForNext = false;
-        let timeLeft = 8.0;
-        const TIME_LIMIT = 8.0;
-        let timerInterval;
+        function showRegister() { document.getElementById('registerBox').style.display = 'block'; }
+
+        function confirmEntry() {
+            if (!document.getElementById('playerName').value) return alert("請輸入班級姓名");
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('game-wrapper').style.display = 'block';
+            resize();
+            initGame();
+            animate();
+        }
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            if (targets.length > 0) setupTargets();
+        }
+
+        window.addEventListener('resize', resize);
 
         class Target {
-            constructor(label, xRange, y) {
+            constructor(label, xMin, xMax, y) {
                 this.label = label;
-                this.xRange = xRange;
-                this.y = y;
-                this.width = 130;
-                this.height = 150;
-                this.x = xRange[0] + Math.random() * (xRange[1] - xRange[0] - this.width);
-                this.speed = 1.0 + Math.random() * 1.0;
-                this.direction = Math.random() > 0.5 ? 1 : -1;
-                this.isDown = false;
-                this.tilt = 0;
-                this.pulse = 0;
+                this.xMin = xMin; this.xMax = xMax; this.y = y;
+                this.w = 80; this.h = 100;
+                this.x = xMin + Math.random() * (xMax - xMin - this.w);
+                this.speed = 1.5 + Math.random();
+                this.dir = 1; this.isDown = false; this.tilt = 0;
             }
             update() {
-                this.pulse += 0.05;
                 if (!this.isDown) {
-                    this.x += this.speed * this.direction;
-                    if (this.x < this.xRange[0] || this.x > this.xRange[1] - this.width) this.direction *= -1;
-                } else {
-                    if (this.tilt < Math.PI / 2) this.tilt += 0.15;
-                }
+                    this.x += this.speed * this.dir;
+                    if (this.x < this.xMin || this.x > this.xMax - this.w) this.dir *= -1;
+                } else if (this.tilt < 1.5) this.tilt += 0.2;
             }
             draw() {
                 ctx.save();
-                ctx.translate(this.x + this.width / 2, this.y + this.height);
+                ctx.translate(this.x + this.w/2, this.y + this.h);
                 ctx.rotate(this.tilt);
-                ctx.translate(-this.width / 2, -this.height);
-                ctx.fillStyle = "#2d3748"; ctx.fillRect(this.width / 2 - 12, this.height - 30, 24, 40);
-                const glow = Math.sin(this.pulse) * 8 + 12;
-                ctx.shadowBlur = this.isDown ? 0 : glow; ctx.shadowColor = "#4fd1c5";
-                ctx.beginPath(); ctx.arc(this.width / 2, 60, 55, 0, Math.PI * 2); ctx.fillStyle = "#1a202c"; ctx.fill();
-                ctx.strokeStyle = "#4fd1c5"; ctx.lineWidth = 4; ctx.stroke();
-                ctx.fillStyle = "#fff"; ctx.font = "900 64px 'Orbitron'"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
-                ctx.fillText(this.label, this.width / 2, 64);
+                ctx.translate(-this.w/2, -this.h);
+                // 畫靶
+                ctx.fillStyle = "#1e293b"; ctx.beginPath(); ctx.arc(this.w/2, 40, 35, 0, Math.PI*2); ctx.fill();
+                ctx.strokeStyle = "#4fd1c5"; ctx.lineWidth = 3; ctx.stroke();
+                ctx.fillStyle = "white"; ctx.font = "bold 32px Arial"; ctx.textAlign = "center";
+                ctx.fillText(this.label, this.w/2, 52);
                 ctx.restore();
             }
             checkHit(mx, my) {
-                if (this.isDown || isGameOver || isWaitingForNext) return false;
-                const dist = Math.sqrt((mx - (this.x + this.width / 2))**2 + (my - (this.y + 60))**2);
-                if (dist < 55) { this.isDown = true; return true; }
-                return false;
+                if (this.isDown || isWaiting) return false;
+                const dist = Math.sqrt((mx - (this.x + this.w/2))**2 + (my - (this.y + 40))**2);
+                return dist < 40;
             }
-            reset() { this.isDown = false; this.tilt = 0; }
+        }
+
+        function setupTargets() {
+            const yPos = canvas.height * 0.65;
+            const third = canvas.width / 3;
+            targets = [
+                new Target('A', 10, third - 10, yPos),
+                new Target('B', third + 10, third * 2 - 10, yPos),
+                new Target('C', third * 2 + 10, canvas.width - 10, yPos)
+            ];
         }
 
         function initGame() {
-            // 自動計算比例
-            const cw = Math.min(window.innerWidth * 0.95, 1000);
-            canvas.width = 1000;
-            canvas.height = 600;
-            canvas.style.width = cw + "px";
-
-            const shuffled = [...rawQuestionBank].sort(() => 0.5 - Math.random());
-            gameQuestions = shuffled.slice(0, 10).map(q => {
-                const optionsFixed = [...q.options];
-                const correctLabel = ["A", "B", "C"][optionsFixed.indexOf(q.correct)];
-                return { ...q, shuffledOptions: optionsFixed, correctLabel };
+            const shuffled = [...rawQuestionBank].sort(() => 0.5 - Math.random()).slice(0, 10);
+            gameQuestions = shuffled.map(q => {
+                const opts = [...q.options];
+                return { ...q, opts, ans: ["A","B","C"][opts.indexOf(q.correct)] };
             });
-
-            targets = [new Target('A', [50, 320], 340), new Target('B', [340, 660], 340), new Target('C', [680, 950], 340)];
-            score = 0; currentQuestionIndex = 0; isGameOver = false;
-            scoreElement.innerText = score;
-            startNewQuestion();
+            setupTargets();
+            nextQuestion();
         }
 
-        function startNewQuestion() {
-            if (currentQuestionIndex < gameQuestions.length) {
-                const q = gameQuestions[currentQuestionIndex];
-                questionText.innerText = q.q;
-                progressText.innerText = `任務進度：${currentQuestionIndex + 1} / 10`;
-                optA.innerText = q.shuffledOptions[0]; optB.innerText = q.shuffledOptions[1]; optC.innerText = q.shuffledOptions[2];
-                Object.values(boxes).forEach(box => box.classList.remove('option-correct'));
-                targets.forEach(t => t.reset());
-                isWaitingForNext = false;
-                resetTimer();
-            } else { endGame(); }
+        function nextQuestion() {
+            if (currentIdx >= 10) return endGame();
+            isWaiting = false;
+            targets.forEach(t => { t.isDown = false; t.tilt = 0; });
+            const q = gameQuestions[currentIdx];
+            document.getElementById('question-text').innerText = q.q;
+            document.getElementById('opt-A').innerText = q.opts[0];
+            document.getElementById('opt-B').innerText = q.opts[1];
+            document.getElementById('opt-C').innerText = q.opts[2];
+            document.getElementById('progress-text').innerText = `進度：${currentIdx + 1} / 10`;
+            document.querySelectorAll('.option-box').forEach(b => b.classList.remove('option-correct'));
+            resetTimer();
         }
 
         function resetTimer() {
             clearInterval(timerInterval);
-            timeLeft = TIME_LIMIT;
+            timeLeft = 8;
             timerInterval = setInterval(() => {
-                if (isWaitingForNext || isGameOver) return;
                 timeLeft -= 0.1;
-                timerBar.style.width = (timeLeft / TIME_LIMIT) * 100 + "%";
-                if (timeLeft <= 0) handleTimeOut();
+                document.getElementById('timer-bar').style.width = (timeLeft/8)*100 + "%";
+                if (timeLeft <= 0) {
+                    isWaiting = true;
+                    showFeedback("超時", false);
+                    revealAnswer();
+                }
             }, 100);
         }
 
-        function handleTimeOut() {
-            isWaitingForNext = true;
-            boxes[gameQuestions[currentQuestionIndex].correctLabel].classList.add('option-correct');
-            showFeedback("超時", false);
-            clearInterval(timerInterval);
-            setTimeout(() => { currentQuestionIndex++; startNewQuestion(); }, 1500);
+        function revealAnswer() {
+            const correctLetter = gameQuestions[currentIdx].ans;
+            document.getElementById('box-' + correctLetter).classList.add('option-correct');
+            setTimeout(() => { currentIdx++; nextQuestion(); }, 1500);
+        }
+
+        function handleHit() {
+            if (isWaiting || isGameOver) return;
+            targets.forEach(t => {
+                if (t.checkHit(mouse.x, mouse.y)) {
+                    isWaiting = true; t.isDown = true;
+                    clearInterval(timerInterval);
+                    if (t.label === gameQuestions[currentIdx].ans) {
+                        score += 10; document.getElementById('score').innerText = score;
+                        showFeedback("命中！", true);
+                    } else {
+                        showFeedback("錯了！", false);
+                    }
+                    revealAnswer();
+                }
+            });
+        }
+
+        function showFeedback(txt, isGood) {
+            const f = document.getElementById('feedback');
+            f.innerText = txt; f.style.color = isGood ? "#4fd1c5" : "#f87171";
+            f.style.opacity = 1;
+            setTimeout(() => f.style.opacity = 0, 1000);
         }
 
         function endGame() {
-            isGameOver = true; clearInterval(timerInterval);
-            finalScoreDisplay.innerText = score;
-            resultScreen.style.display = "flex";
+            isGameOver = true;
+            document.getElementById('result-screen').style.display = "flex";
+            document.getElementById('final-score').innerText = score;
             const name = document.getElementById('playerName').value;
-            const sendURL = `https://docs.google.com/forms/d/e/1FAIpQLSe_wsv6i2HiQnM-MtJ4Kb2ZEwmGnLKdUC52lTqrMZ3he-qrSQ/formResponse?entry.628463820=${encodeURIComponent(name)}&entry.1081135647=${score}&submit=Submit`;
-            fetch(sendURL, { mode: 'no-cors' });
-        }
-
-        function showFeedback(msg, isCorrect) {
-            feedback.innerText = msg; feedback.style.color = isCorrect ? "#4fd1c5" : "#f87171";
-            feedback.style.opacity = 1; feedback.style.transform = "translate(-50%, -50%) scale(1.5)";
-            setTimeout(() => { feedback.style.opacity = 0; }, 1200);
-        }
-
-        function handleShot() {
-            if (isGameOver || isWaitingForNext) return;
-            targets.forEach(t => {
-                if (t.checkHit(mouse.x, mouse.y)) {
-                    isWaitingForNext = true; clearInterval(timerInterval);
-                    const q = gameQuestions[currentQuestionIndex];
-                    boxes[q.correctLabel].classList.add('option-correct');
-                    if (t.label === q.correctLabel) { score += 10; scoreElement.innerText = score; showFeedback("命中目標", true); }
-                    else { showFeedback("目標錯誤", false); }
-                    setTimeout(() => { currentQuestionIndex++; startNewQuestion(); }, 1500);
-                }
-            });
+            const url = `https://docs.google.com/forms/d/e/1FAIpQLSe_wsv6i2HiQnM-MtJ4Kb2ZEwmGnLKdUC52lTqrMZ3he-qrSQ/formResponse?entry.628463820=${encodeURIComponent(name)}&entry.1081135647=${score}&submit=Submit`;
+            fetch(url, { mode: 'no-cors' });
         }
 
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             targets.forEach(t => { t.update(); t.draw(); });
-            if (!isGameOver) {
-                ctx.strokeStyle = "#4fd1c5"; ctx.lineWidth = 2;
-                ctx.beginPath(); ctx.arc(mouse.x, mouse.y, 15, 0, Math.PI*2); ctx.stroke();
-                ctx.beginPath(); ctx.moveTo(mouse.x-20, mouse.y); ctx.lineTo(mouse.x+20, mouse.y); ctx.stroke();
-                ctx.beginPath(); ctx.moveTo(mouse.x, mouse.y-20); ctx.lineTo(mouse.x, mouse.y+20); ctx.stroke();
-            }
+            // 準星
+            ctx.strokeStyle = "#4fd1c5"; ctx.lineWidth = 2;
+            ctx.beginPath(); ctx.arc(mouse.x, mouse.y, 15, 0, Math.PI*2); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(mouse.x-20, mouse.y); ctx.lineTo(mouse.x+20, mouse.y); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(mouse.x, mouse.y-20); ctx.lineTo(mouse.x, mouse.y+20); ctx.stroke();
             requestAnimationFrame(animate);
         }
 
-        // --- 修正後的座標計算邏輯 ---
-        function updateMousePos(clientX, clientY) {
+        // 事件監聽
+        const getPos = (e) => {
             const rect = canvas.getBoundingClientRect();
-            // 這裡必須計算顯示比例 (顯示寬度 vs 原始寬度)
-            const scaleX = canvas.width / rect.width;
-            const scaleY = canvas.height / rect.height;
-            mouse.x = (clientX - rect.left) * scaleX;
-            mouse.y = (clientY - rect.top) * scaleY;
-        }
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            mouse.x = clientX - rect.left;
+            mouse.y = clientY - rect.top;
+        };
+        canvas.addEventListener('mousemove', getPos);
+        canvas.addEventListener('mousedown', (e) => { getPos(e); handleHit(); });
+        canvas.addEventListener('touchstart', (e) => { e.preventDefault(); getPos(e); handleHit(); });
 
-        canvas.addEventListener('mousemove', (e) => updateMousePos(e.clientX, e.clientY));
-        canvas.addEventListener('mousedown', (e) => { e.preventDefault(); handleShot(); });
-        
-        // 增加觸控支援
-        canvas.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            const touch = e.touches[0];
-            updateMousePos(touch.clientX, touch.clientY);
-            handleShot();
-        });
-
-        window.onload = initGame;
     </script>
 </body>
 </html>
