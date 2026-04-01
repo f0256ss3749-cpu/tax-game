@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>租稅小學堂</title>
+    <title>小小租稅神射手</title>
+<link rel="icon" href="Favicon.png" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* --- 第一段 CSS (完全不動) --- */
@@ -15,16 +16,41 @@
             background-image: url("開始按鈕.png");background-size:contain;background-repeat:no-repeat;background-position:center;background-color: transparent;border: none;cursor: pointer;width:250px;height:80px; position: absolute;bottom: 50px;left: 50%;transform: translateX(-50%); transition: transform 0.1s; }
         .start-btn:active {transform: translateX(-50%) scale(0.95);}
         .game-title {
-            position: absolute;
-            top: 0px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 60px;
-            color:#003060;
-            font-weight: bold;
-            white-space: nowrap;
-        }
-        .register-box {
+    position: absolute;
+    top: 20px; /* 稍微往下移一點，避開圖片邊緣 */
+    left: 50%;
+    transform: translateX(-50%);
+    
+    /* --- 1. 這裡改成你要的霓虹底框 --- */
+    background: rgba(79, 209, 197, 0.3);    /* 半透明青色底 */
+    padding: 15px 50px;                     /* 內距 */
+    border-radius: 25px;                    /* 稍硬的圓角，更有科技感 */
+    border: 3px solid #4fd1c5;              /* 青色亮邊框 */
+    
+    /* --- 2. 加上外發光與內發光 --- */
+    box-shadow: 
+        0 0 20px rgba(79, 209, 197, 0.6),   /* 外部發光 */
+        inset 0 0 15px rgba(79, 209, 197, 0.4); /* 內部發光 */
+    
+    /* --- 3. 文字設定：白色字體 + 深藍色描邊 (最吸睛) --- */
+    font-size: 65px;
+    color: #ffffff;                         /* 字改白色 */
+    font-weight: 900;
+    /* 加上深藍色描邊，字體才不會被背景吃掉 */
+    text-shadow: 
+        2px 2px 0 #003060, 
+        -2px -2px 0 #003060, 
+        2px -2px 0 #003060, 
+        -2px 2px 0 #003060;
+    
+    white-space: nowrap;
+    z-index: 5;
+    
+    /* 4. 毛玻璃效果 (讓框框後的城市背景微微模糊，很有質感) */
+    backdrop-filter: blur(4px);
+}
+    
+           .register-box {
             position: absolute;
             top: 50%;
             left: 50%;
@@ -95,14 +121,25 @@
             z-index: 10;
         }
         .question-card {
-            background: rgba(26, 32, 44, 0.95);
-            padding: 30px 50px;
-            border-radius: 20px;
-            display: inline-block;
-            border: 2px solid #4fd1c5;
-            box-shadow: 0 0 25px rgba(79, 209, 197, 0.3);
-            max-width: 95%;
-        }
+    background: rgba(26, 32, 44, 0.95);
+    padding: 30px 40px; 
+    border-radius: 20px;
+    display: inline-block;
+    border: 2px solid #4fd1c5;
+    box-shadow: 0 0 25px rgba(79, 209, 197, 0.3);
+    
+    /* --- 固定寬度與自動高度的設定 --- */
+    width: 800px;           /* 固定寬度，你可以根據螢幕大小調整這個數值 */
+    max-width: 95%;         /* 預防在小螢幕上超出邊界 */
+    height: auto;           /* 高度自動 */
+    min-height: 200px;      /* 設定最小高度，字少時也比較美觀 */
+    
+    /* --- 文字換行處理 --- */
+    word-wrap: break-word;  /* 強制長字換行 */
+    overflow-wrap: break-word;
+    white-space: normal;    /* 允許正常換行 */
+    text-align: left;       /* 題目靠左對齊，換行後比較好閱讀 */
+}
         #timer-bar-container {
             width: 100%;
             height: 10px;
@@ -118,13 +155,16 @@
             transition: width 0.1s linear, background 0.3s;
         }
         .option-box {
-            background: #1e293b;
-            padding: 8px 12px;
-            border-radius: 8px;
-            border: 1px solid #1e3a8a;
-            color: #cbd5e1;
-            transition: all 0.3s ease;
-        }
+    background: #1e293b;
+    padding: 12px 15px; /* 增加一點內距 */
+    border-radius: 8px;
+    border: 1px solid #1e3a8a;
+    color: #cbd5e1;
+    transition: all 0.3s ease;
+    word-break: break-all; /* 強制換行 */
+    display: flex;
+    align-items: flex-start;
+}
         .option-correct {
             border-color: #10b981 !important;
             background: #064e3b !important;
@@ -143,17 +183,32 @@
             pointer-events: none;
         }
         #feedback {
-            position: absolute;
-            top: 55%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 80px;
-            font-weight: 900;
-            opacity: 0;
-            pointer-events: none;
-            z-index: 20;
-            text-shadow: 0 0 20px rgba(0,0,0,0.5);
-        }
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+    /* 核心框框設定 */
+    padding: 20px 60px;
+    border-radius: 100px; /* 膠囊形狀 */
+    font-size: 60px;
+    font-weight: 900;
+    text-align: center;
+    white-space: nowrap;
+    
+    /* 初始狀態隱藏 */
+    opacity: 0;
+    pointer-events: none;
+    z-index: 100;
+    
+    /* 邊框與陰影特效 */
+    border: 5px solid currentColor; /* 自動抓取文字顏色 */
+    background: rgba(13, 17, 23, 0.9); /* 深色半透明背景，讓文字跳出來 */
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.8), inset 0 0 20px currentColor;
+    
+    /* 動畫過渡 */
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
         .result-screen {
             position: absolute;
             inset: 0;
@@ -169,7 +224,7 @@
 </head>
 <body style="margin: 0; overflow: hidden; user-select: none;">  
 
-    <h1 id="gameTitle" class="game-title">租稅射射看</h1>
+    <h1 id="gameTitle" class="game-title">小小租稅神射手</h1>
     <button id="startBtn" class="start-btn" onclick="startGame()"></button>
     <div id="registerBox" class="register-box">
         <input type="text" id="playerName" placeholder="請輸入班級與姓名" autocomplete="off">
@@ -182,8 +237,8 @@
                 <div class="flex justify-start items-center mb-3">
                     <div id="progress-text" class="text-sm text-cyan-400 font-bold tracking-widest">任務進度：1 / 10</div>
                 </div>
-                <h2 id="question-text" class="text-2xl font-bold text-white mb-8">正在載入戰術數據...</h2>
-                <div id="options-container" class="grid grid-cols-3 gap-4 text-left text-4xl">
+                <h2 id="question-text" class="text-4xl font-black text-white mb-6 whitespace-normal leading-relaxed">正在載入戰術數據...</h2>
+                <div id="options-container" class="grid grid-cols-3 gap-4 text-left text-3xl">
                     <div id="box-A" class="option-box">
                         <span class="font-black mr-2 text-cyan-400">A</span><span id="opt-A">---</span>
                     </div>
@@ -243,32 +298,17 @@
 
         // --- 第二段 JS (完全保留原始邏輯與繪圖) ---
         const rawQuestionBank = [
-        { q: "國家的稅收分為哪兩類？", options: ["國稅及地方稅", "所得稅及房屋稅", "地價稅及營業稅"], correct: "國稅及地方稅" },
-        { q: "下列哪一種稅屬於地方稅？", options: ["萬萬稅", "贈與稅", "房屋稅"], correct: "房屋稅" },
-        { q: "請問唯一官方版儲存雲端發票的APP是哪一個？", options: ["發票怪獸APP", "統一發票兌獎APP", "雲端發票APP"], correct: "統一發票兌獎APP" },
-        { q: "遇到稅捐有爭議時可以找誰幫忙？", options: ["消保官", "法務官", "納保官"], correct: "納保官" },
-        { q: "雲端發票的好處有什麼？", options: ["主動通知中獎", "發票變大", "免費看電影"], correct: "主動通知中獎" },
-        { q: "買東西時不印出紙本發票，把發票存在手機條碼裡，這叫做什麼？", options: ["隱形發票", "空氣發票", "雲端發票"], correct: "雲端發票" },
-        { q: "爸爸開的汽車、媽媽騎的機車（151cc以上），每年 4 月要繳什麼稅才能上路？", options: ["紅綠燈稅", "使用牌照稅", "停車稅"], correct: "使用牌照稅" },
-        { q: "去看電影、去遊樂園玩，門票裡其實包含了一種稅，叫做？", options: ["開心稅", "贈與稅", "娛樂稅"], correct: "娛樂稅" },
-        { q: "為什麼政府要向人民課徵租稅？", options: ["為了依法取得建設國家的穩定財源", "為了存錢", "為了好玩"], correct: "為了依法取得建設國家的穩定財源" },
-        { q: "下列哪一項是稅金的用途？", options: ["蓋學校", "修馬路", "以上皆是"], correct: "以上皆是" },
-        { q: "負責徵收「國稅」的單位是哪一個？", options: ["警察局", "國稅局", "稅捐處"], correct: "國稅局" },
-        { q: "誰需要繳納綜合所得稅？", options: ["有中華民國來源所得的人", "所有小朋友", "只有外國人"], correct: "有中華民國來源所得的人" },
-        { q: "繼承過世親人的財產時，要繳納什麼稅？", options: ["遺產稅", "房屋稅", "地價稅"], correct: "遺產稅" },
-        { q: "誰可以繼承遺產稅？", options: ["男生", "女生", "男生與女生都可以"], correct: "男生與女生都可以" },
-        { q: "如果超過繳稅期間沒繳稅，會被加徵什麼錢？", options: ["獎金", "滯納金", "手續費"], correct: "滯納金" },
-        { q: "下列哪一項是「稅金」帶給我們的生活便利？", options: ["晚上的路燈會亮", "有乾淨的公園可以玩", "以上皆是"], correct: "以上皆是" },
-        { q: "當人死亡留有遺產時，應由誰來繳納遺產稅？", options: ["鄰居", "繼承人", "警察"], correct: "繼承人" },
-        { q: "「綜合所得稅」通常在每年的幾月辦理申報？", options: ["4月", "5月", "11月"], correct: "5月" },
-        { q: "買東西付錢時，價格裡其實已經包含了什麼稅？", options: ["所得稅", "遺產稅", "營業稅"], correct: "營業稅" },
-        { q: "每年11月要繳納土地的什麼稅？", options: ["地價稅", "牌照稅", "營業稅"], correct: "地價稅" },
-        { q: "在同一縣市內有很多筆土地，會收到幾張地價稅單？", options: ["每一筆一張", "只會收到一張", "都不會收到"], correct: "只會收到一張" },
-        { q: "關於牌照稅歸戶，一張繳款書最多限列幾筆車籍？", options: ["3比", "5筆", "10筆"], correct: "5筆" },
-        { q: "在哪裡可以找到納保官？", options: ["國稅局及地方稅捐機關", "學校", "超商"], correct: "國稅局及地方稅捐機關" },
-        { q: "想要房屋稅省錢，要在什麼時間之前申請「住家用」稅率？", options: ["1月22日", "3月22日", "9月22日"], correct: "3月22日" },
-        { q: "每年 11 月開徵的稅目是？", options: ["使用牌照稅", "房屋稅", "地價稅"], correct: "地價稅" }
-    ];
+        { q: "1.我們國家的稅收可以分為哪兩類呢？", options: ["國稅及地方稅", "所得稅及房屋稅", "地價稅及營業稅"], correct: "國稅及地方稅" },
+        { q: "2.遇到地方稅的相關問題，可以找哪一個機關詢問呢？", options: ["國稅局", "地方政府所屬稅捐(局)處", "警察局"], correct: "地方政府所屬稅捐(局)處" },
+        { q: "3.因為雄妹是女孩子，所以她不能繼承遺產?", options: ["對，遺產只能由男生繼承", "錯，性別平等，女生也可以繼承遺產", "男生先分完財產，剩下的才輪到女生"], correct: "錯，性別平等，女生也可以繼承遺產" },
+        { q: "4.以下哪個稅不是國稅呢?", options: ["所得稅", "營業稅", "房屋稅"], correct: "房屋稅" },
+        { q: "5.使用牌照稅每年幾月繳納呢?", options: ["3月", "4月", "5月"], correct: "4月" },
+        { q: "6.以下哪個組合是地方稅呢?", options: ["綜合所得稅、營業稅", "地價稅、房屋稅", "贈與稅、娛樂稅"], correct: "地價稅、房屋稅" },
+        { q: "7.以下哪個方式不能繳稅呢?", options: ["到銀行繳稅", "到郵局繳稅", "稅額3萬元以下可以到超商繳稅"], correct: "到郵局繳稅" },
+        { q: "8.請問統一發票什麼時候開獎呢？", options: ["每單月25號", "每雙月25號", "每個月25號"], correct: "每單月25號" },
+        { q: "9.使用雲端發票有哪些好處呢？", options: ["省紙環保", "有雲端發票專屬獎，中獎機會多一次", "以上皆是"], correct: "以上皆是" },
+        { q: "10.我遇到稅捐爭議案件了~可以找誰諮詢或協助呢？", options: ["警察", "納保官", "里長"], correct: "納保官" }
+            ];
 
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
@@ -310,7 +350,7 @@
             this.width = 130;
             this.height = 150;
             this.x = xRange[0] + Math.random() * (xRange[1] - xRange[0] - this.width);
-            this.speed = 2.0 ;
+            this.speed = 2.5 ;
             this.direction = Math.random() > 0.5 ? 1 : -1;
             this.isDown = false;
             this.tilt = 0;
@@ -397,38 +437,39 @@
     }
 
     function initGame() {
-    canvas.width = 1000;
-    canvas.height = 600;
+        canvas.width = 1000;
+        canvas.height = 600;
 
-    // 1. 先將原始題庫隨機排序（確保題目順序是隨機的）
-    const shuffled = [...rawQuestionBank].sort(() => 0.5 - Math.random());
+        // 1. 直接取原始題庫的前 10 題 (不隨機排序)
+        const fixedSelection = rawQuestionBank.slice(0, 10);
 
-    // 2. 取前 10 題，但「移除」選項洗牌的邏輯
-    gameQuestions = shuffled.slice(0, 10).map(q => {
-        // 直接使用原始的 q.options，不再進行 sort 排序
-        const optionsFixed = [...q.options]; 
+        // 2. 處理題目資料，並確保標籤正確
+        gameQuestions = fixedSelection.map(q => {
+            // 直接使用原始的 q.options，不移動順序
+            const optionsFixed = [...q.options]; 
+            
+            // 找出正確答案在陣列中的位置 (0=A, 1=B, 2=C)
+            const correctIndex = optionsFixed.indexOf(q.correct);
+            const correctLabel = ["A", "B", "C"][correctIndex];
+            
+            return { ...q, shuffledOptions: optionsFixed, correctLabel };
+        });
+
+        // 3. 設定標靶位置 (這裡已經包含你剛才要求的下移數值 420)
+        targets = [
+            new Target('A', [50, 320], 420),
+            new Target('B', [340, 660], 420),
+            new Target('C', [680, 950], 420)
+        ];
+
+        score = 0;
+        currentQuestionIndex = 0;
+        isGameOver = false;
+        scoreElement.innerText = score;
+        resultScreen.style.display = "none";
         
-        // 根據原始順序定義正確答案的標籤 (第一個是 A, 第二個是 B, 第三個是 C)
-        const correctLabel = ["A", "B", "C"][optionsFixed.indexOf(q.correct)];
-        
-        return { ...q, shuffledOptions: optionsFixed, correctLabel };
-    });
-
-    // ... 後續的 targets 設置與 score 重置保持不變 ...
-    targets = [
-        new Target('A', [50, 320], 340),
-        new Target('B', [340, 660], 340),
-        new Target('C', [680, 950], 340)
-    ];
-
-    score = 0;
-    currentQuestionIndex = 0;
-    isGameOver = false;
-    scoreElement.innerText = score;
-    resultScreen.style.display = "none";
-    
-    startNewQuestion();
-}
+        startNewQuestion();
+    }
 
     function startNewQuestion() {
         if (currentQuestionIndex < gameQuestions.length) {
@@ -489,16 +530,16 @@
     }
 
     function handleTimeOut() {
-        isWaitingForNext = true;
-        highlightCorrectAnswer();
-        showFeedback("超時", false);
-        clearInterval(timerInterval);
-        
-        setTimeout(() => {
-            currentQuestionIndex++;
-            startNewQuestion();
-        }, 1500);
-    }
+    isWaitingForNext = true;
+    highlightCorrectAnswer();
+    showFeedback("⏳ 超時！", false); // 加個圖示更直覺
+    clearInterval(timerInterval);
+    
+    setTimeout(() => {
+        currentQuestionIndex++;
+        startNewQuestion();
+    }, 1500);
+}
 
     function endGame() {
         isGameOver = true;
@@ -527,16 +568,29 @@
     }
 
     function showFeedback(msg, isCorrect) {
-        feedback.innerText = msg;
-        feedback.style.color = isCorrect ? "#4fd1c5" : "#f87171";
-        feedback.style.opacity = 1;
-        
-        feedback.style.transform = "translate(-50%, -50%) scale(1.5)";
-        setTimeout(() => {
-            feedback.style.opacity = 0;
-            feedback.style.transform = "translate(-50%, -50%) scale(1.0)";
-        }, 1200);
-    }
+    const color = isCorrect ? "#4fd1c5" : "#f87171"; // 命中用青色，錯誤用粉紅色
+    
+    feedback.innerText = msg;
+    feedback.style.color = color;
+    
+    // 強制重置動畫狀態
+    feedback.style.transition = 'none';
+    feedback.style.opacity = "0";
+    feedback.style.transform = "translate(-50%, -50%) scale(0.5)"; // 從小開始
+    
+    // 觸發重繪後顯示
+    setTimeout(() => {
+        feedback.style.transition = 'all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+        feedback.style.opacity = "1";
+        feedback.style.transform = "translate(-50%, -50%) scale(1.2)"; // 彈跳變大
+    }, 10);
+
+    // 1.2 秒後消失
+    setTimeout(() => {
+        feedback.style.opacity = "0";
+        feedback.style.transform = "translate(-50%, -50%) scale(1.0)";
+    }, 1200);
+}
 
     function handleShot() {
         if (isGameOver || isWaitingForNext) return;
