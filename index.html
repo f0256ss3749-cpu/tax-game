@@ -121,24 +121,47 @@
             z-index: 10;
         }
         .question-card {
-    background: rgba(26, 32, 44, 0.95);
-    padding: 30px 40px; 
-    border-radius: 20px;
-    display: inline-block;
-    border: 2px solid #4fd1c5;
-    box-shadow: 0 0 25px rgba(79, 209, 197, 0.3);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    /* --- 關鍵修改：從固定 px 改為百分比 --- */
+    width: 85%;             /* 寬度佔畫面的 85%，不論螢幕大或小都會留邊 */
+    max-width: 900px;       /* 但在超大螢幕上，寬度最寬不超過 900px，避免太扁 */
     
-    /* --- 固定寬度與自動高度的設定 --- */
-    width: 800px;           /* 固定寬度，你可以根據螢幕大小調整這個數值 */
-    max-width: 95%;         /* 預防在小螢幕上超出邊界 */
-    height: auto;           /* 高度自動 */
-    min-height: 200px;      /* 設定最小高度，字少時也比較美觀 */
+    /* 高度設定 */
+    min-height: 180px;      /* 降低最小高度，讓它更精簡 */
+    padding: 20px 40px;     /* 稍微縮減內距 */
     
-    /* --- 文字換行處理 --- */
-    word-wrap: break-word;  /* 強制長字換行 */
-    overflow-wrap: break-word;
-    white-space: normal;    /* 允許正常換行 */
-    text-align: left;       /* 題目靠左對齊，換行後比較好閱讀 */
+    /* 居中設定 */
+    margin: 20px auto;      /* 自動左右置中，並與上方留點距離 */
+
+    /* --- 霓虹發光樣式保持不變 --- */
+    background: rgba(79, 209, 197, 0.2);
+    border: 4px solid #4fd1c5;
+    border-radius: 25px;
+    box-shadow: 
+        0 0 20px rgba(79, 209, 197, 0.5),
+        inset 0 0 15px rgba(79, 209, 197, 0.3);
+    backdrop-filter: blur(8px);
+
+    /* 文字處理 */
+    word-wrap: break-word;
+    text-align: center;
+}
+
+/* 題目文字同步微調 */
+#question-text {
+    /* 使用 vw (視窗寬度單位) 讓字體也會隨螢幕大小微調，或者維持固定 px */
+    font-size: clamp(24px, 4vw, 40px); /* 最小 24px，隨螢幕變大，最大 40px */
+    font-weight: 900;
+    color: #ffffff;
+    line-height: 1.3;
+    margin-bottom: 15px;
+    white-space: normal;
+    width: 100%;
 }
         #timer-bar-container {
             width: 100%;
